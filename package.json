@@ -42,16 +42,22 @@
         "utils",
         "utility"
     ],
-    "author": "",
+    "author": {
+        "name": "yvygyyth",
+        "email": "1589937631@qq.com"
+    },
     "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": ""
+    "sideEffects": false,
+    "exports": {
+        ".": {
+            "import": "./dist/index.esm.js",
+            "require": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
     },
-    "bugs": {
-        "url": ""
+    "publishConfig": {
+        "access": "public"
     },
-    "homepage": "",
     "devDependencies": {
         "@types/node": "^20.10.0",
         "@typescript-eslint/eslint-plugin": "^8.42.0",
