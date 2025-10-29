@@ -13,7 +13,10 @@
         "pnpm": ">=8.0.0"
     },
     "files": [
-        "dist"
+        "dist",
+        "package.json",
+        "README.md",
+        "LICENSE"
     ],
     "scripts": {
         "preinstall": "node scripts/preinstall.js",
