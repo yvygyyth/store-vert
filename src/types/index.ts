@@ -1,44 +1,25 @@
-/**
- * 通用类型定义
- */
+export type Store = {
+  // 获取值
+  getItem<T>(key: string): Promise<T | null> | T | null;
 
-/**
- * 深度部分类型
- */
-export type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P]
-}
+  // 设置值
+  setItem<T>(key: string, value: T): Promise<T> | T;
 
-/**
- * 深度只读类型
- */
-export type DeepReadonly<T> = {
-  readonly [P in keyof T]: T[P] extends object ? DeepReadonly<T[P]> : T[P]
-}
+  // 删除值
+  removeItem(key: string): Promise<void> | void;
 
-/**
- * 可为空的类型
- */
-export type Nullable<T> = T | null | undefined
+  // 清空存储
+  clear(): Promise<void> | void;
 
-/**
- * 函数类型
- */
-export type Fn<T = void> = () => T
-export type AnyFn = (...args: any[]) => any
+  // 获取键数量
+  length(): Promise<number> | number;
 
-/**
- * 键值对类型
- */
-export type KeyValue<K extends string | number | symbol = string, V = any> = Record<K, V>
+  // 获取某个键
+  key(n: number): Promise<string> | string;
 
-/**
- * 提取 Promise 返回值类型
- */
-export type Awaited<T> = T extends Promise<infer U> ? U : T
+  // 获取所有键
+  keys(): Promise<string[]> | string[];
 
-/**
- * 数组元素类型
- */
-export type ArrayElement<T> = T extends (infer U)[] ? U : never
-
+  // 遍历所有数据
+  iterate<T, R>(iteratee: (value: T, key: string, iterationNumber: number) => R): Promise<R> | R;
+};
