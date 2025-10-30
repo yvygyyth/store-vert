@@ -1,68 +1,85 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+    lint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 8
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '18'
+                  cache: 'pnpm'
 
-      - name: Run linter
-        run: npm run lint
+            - name: Install dependencies
+              run: pnpm install
 
-      - name: Check formatting
-        run: npm run format:check
+            - name: Run linter
+              run: pnpm lint
 
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+            - name: Check formatting
+              run: pnpm format:check
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 8
 
-      - name: Run tests
-        run: npm run test:coverage
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '18'
+                  cache: 'pnpm'
 
-      - name: Upload coverage
-        uses: codecov/codecov-action@v3
-        with:
-          files: ./coverage/coverage-final.json
+            - name: Install dependencies
+              run: pnpm install
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+            - name: Run tests
+              run: pnpm test:coverage
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+            - name: Upload coverage
+              uses: codecov/codecov-action@v3
+              with:
+                  files: ./coverage/coverage-final.json
 
-      - name: Install dependencies
-        run: npm ci
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
 
-      - name: Build
-        run: npm run build
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 8
 
-      - name: Type check
-        run: npm run typecheck
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '18'
+                  cache: 'pnpm'
 
+            - name: Install dependencies
+              run: pnpm install
+
+            - name: Build
+              run: pnpm build
+
+            - name: Type check
+              run: pnpm typecheck
