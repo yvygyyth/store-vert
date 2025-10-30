@@ -1,75 +1,76 @@
 {
-    "name": "libra-template",
-    "version": "0.1.0",
-    "description": "A minimal TypeScript utility library template with Vite, ESLint, Prettier, and Vitest",
-    "type": "module",
-    "main": "dist/index.js",
-    "module": "dist/index.esm.js",
-    "types": "dist/index.d.ts",
-    "packageManager": "pnpm@8.15.0",
-    "engines": {
-        "node": ">=18.0.0",
-        "npm": ">=9.0.0",
-        "pnpm": ">=8.0.0"
-    },
-    "files": [
-        "dist",
-        "package.json",
-        "README.md",
-        "LICENSE"
-    ],
-    "scripts": {
-        "preinstall": "node scripts/preinstall.js",
-        "dev": "vite",
-        "build": "tsc && vite build",
-        "lint": "eslint src --ext .ts",
-        "lint:fix": "eslint src --ext .ts --fix",
-        "format": "prettier --write .",
-        "format:check": "prettier --check .",
-        "test": "vitest run",
-        "test:watch": "vitest",
-        "test:coverage": "vitest run --coverage",
-        "typecheck": "tsc --noEmit",
-        "prepublishOnly": "pnpm run lint && pnpm run test && pnpm run build"
-    },
-    "keywords": [
-        "typescript",
-        "library",
-        "vite",
-        "eslint",
-        "prettier",
-        "vitest",
-        "utils",
-        "utility"
-    ],
-    "author": {
-        "name": "yvygyyth",
-        "email": "1589937631@qq.com"
-    },
-    "license": "MIT",
-    "sideEffects": false,
-    "exports": {
-        ".": {
-            "import": "./dist/index.esm.js",
-            "require": "./dist/index.js",
-            "types": "./dist/index.d.ts"
-        }
-    },
-    "publishConfig": {
-        "access": "public"
-    },
-    "devDependencies": {
-        "@types/node": "^20.10.0",
-        "@typescript-eslint/eslint-plugin": "^8.42.0",
-        "@typescript-eslint/parser": "^8.44.0",
-        "eslint": "^9.38.0",
-        "eslint-config-prettier": "^9.0.0",
-        "husky": "9.1.7",
-        "jsdom": "^22.1.0",
-        "prettier": "^3.6.2",
-        "typescript": "^5.2.0",
-        "vite": "^5.0.0",
-        "vite-plugin-dts": "4.5.4",
-        "vitest": "^3.2.4"
+  "name": "libra-template",
+  "version": "0.1.0",
+  "description": "A minimal TypeScript utility library template with Vite, ESLint, Prettier, and Vitest",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "packageManager": "pnpm@8.15.0",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "preinstall": "node scripts/preinstall.js",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm run lint && pnpm run test && pnpm run build",
+    "prepare": "husky"
+  },
+  "keywords": [
+    "typescript",
+    "library",
+    "vite",
+    "eslint",
+    "prettier",
+    "vitest",
+    "utils",
+    "utility"
+  ],
+  "author": {
+    "name": "yvygyyth",
+    "email": "1589937631@qq.com"
+  },
+  "license": "MIT",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^8.42.0",
+    "@typescript-eslint/parser": "^8.44.0",
+    "eslint": "^9.38.0",
+    "eslint-config-prettier": "^9.0.0",
+    "husky": "9.1.7",
+    "jsdom": "^22.1.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.2.0",
+    "vite": "^5.0.0",
+    "vite-plugin-dts": "4.5.4",
+    "vitest": "^3.2.4"
+  }
 }
