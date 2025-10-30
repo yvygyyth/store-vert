@@ -1,5 +1,5 @@
 {
-    "name": "libra-template",
+    "name": "store-vert",
     "version": "0.1.0",
     "description": "A minimal TypeScript utility library template with Vite, ESLint, Prettier, and Vitest",
     "type": "module",
