@@ -1,11 +1,12 @@
 import { METHODS } from '@/constants'
 import type { AnyRecord } from './commom'
+import type { StorageNamespace } from './useStorage'
 
 export type Key = string | symbol | number
 
 export interface AsyncStorage<Schema extends AnyRecord = AnyRecord> {
     // 获取值
-    [METHODS.getItem]<K extends keyof Schema>(key: K): Promise<Schema[K] | null>
+    [METHODS.getItem]<K extends keyof Schema>(key: K): Promise<Schema[K] | undefined>
 
     // 设置值
     [METHODS.setItem]<K extends keyof Schema>(key: K, value: Schema[K]): Promise<Schema[K]>
@@ -20,20 +21,20 @@ export interface AsyncStorage<Schema extends AnyRecord = AnyRecord> {
     [METHODS.length](): Promise<number>
 
     // 获取某个键
-    [METHODS.key](n: number): Promise<keyof Schema>
+    // [METHODS.key](n: number): Promise<keyof Schema>
 
     // 获取所有键
-    [METHODS.keys](): Promise<keyof Schema[]>
+    [METHODS.keys](): Promise<(keyof Schema)[]>
 
     // 遍历所有数据
     [METHODS.iterate]<R>(
         iteratee: <K extends keyof Schema>(value: Schema[K], key: K, iterationNumber: number) => R
-    ): Promise<R>
+    ): Promise<void>
 }
 
 export interface SyncStorage<Schema extends AnyRecord = AnyRecord> {
     // 获取值
-    [METHODS.getItem]<K extends keyof Schema>(key: K): Schema[K] | null
+    [METHODS.getItem]<K extends keyof Schema>(key: K): Schema[K] | undefined
 
     // 设置值
     [METHODS.setItem]<K extends keyof Schema>(key: K, value: Schema[K]): Schema[K]
@@ -48,13 +49,21 @@ export interface SyncStorage<Schema extends AnyRecord = AnyRecord> {
     [METHODS.length](): number
 
     // 获取某个键
-    [METHODS.key](n: number): keyof Schema
+    // [METHODS.key](n: number): keyof Schema
 
     // 获取所有键
-    [METHODS.keys](): keyof Schema[]
+    [METHODS.keys](): (keyof Schema)[]
 
     // 遍历所有数据
-    [METHODS.iterate]<R>(iteratee: <K extends keyof Schema>(value: Schema[K], key: K, iterationNumber: number) => R): R
+    [METHODS.iterate]<R>(
+        iteratee: <K extends keyof Schema>(value: Schema[K], key: K, iterationNumber: number) => R
+    ): void
 }
 
-export type Storage<Schema extends AnyRecord = AnyRecord> = AsyncStorage<Schema> | SyncStorage<Schema>
+export type StorageReturn<Schema extends AnyRecord = AnyRecord> = AsyncStorage<Schema> | SyncStorage<Schema>
+
+export interface StorageClassConstructor {
+    new (options: StorageNamespace): StorageReturn
+}
+
+export type Storage = StorageClassConstructor

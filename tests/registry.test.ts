@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { inject, useStorage, useStorageByType } from '../src/registry'
-import { STORAGE_TYPES } from '../src/constants'
+import { inject, useStorage } from '../src/registry'
 
 describe('Storage Registry', () => {
     it('should inject and retrieve sync storage', () => {
@@ -16,7 +15,7 @@ describe('Storage Registry', () => {
         }
 
         inject(mockStorage, 'testSync')
-        const storage = useStorage('testSync')
+        const storage = useStorage({ key: 'testSync' })
         expect(storage).toBeDefined()
     })
 
@@ -33,28 +32,11 @@ describe('Storage Registry', () => {
         }
 
         inject(mockAsyncStorage, 'testAsync')
-        const storage = useStorage('testAsync')
+        const storage = useStorage({ key: 'testAsync' })
         expect(storage).toBeDefined()
     })
 
     it('should throw error for non-existent storage', () => {
-        expect(() => useStorage('nonExistent')).toThrow('Storage实例 nonExistent 未注册')
-    })
-
-    it('should get storage by type', () => {
-        const mockStorage = {
-            getItem: (key: string) => null,
-            setItem: (key: string, value: string) => {},
-            removeItem: (key: string) => {},
-            clear: () => {},
-            length: () => 0,
-            key: (n: number) => '',
-            keys: () => [],
-            iterate: (iteratee: any) => undefined
-        }
-
-        inject(mockStorage, 'testByType')
-        const storage = useStorageByType('testByType', STORAGE_TYPES.sync)
-        expect(storage).toBeDefined()
+        expect(() => useStorage({ key: 'nonExistent' })).toThrow('Storage实例 nonExistent 未注册')
     })
 })

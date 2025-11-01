@@ -1,4 +1,5 @@
 export * from './registry'
+export * from './createStore'
 
 // 导出类型定义
 export * from './types'

@@ -53,7 +53,64 @@ function extendSyncStorage(storage: SyncStorage): SyncEnhancedStorage
 
 ## 使用示例
 
-### 示例 1：注入异步存储（如 IndexedDB）
+### 示例 1：使用 createStore 创建存储实例（带默认值）
+
+```typescript
+import { createStore, STORAGE_KEYS } from 'store-vert'
+
+// 定义 Schema 类型
+interface UserSchema {
+    name: string
+    age: number
+    email: string
+}
+
+// 创建带默认值的存储实例
+const userStore = createStore<UserSchema>({
+    key: STORAGE_KEYS.local,
+    defaultValue: {
+        name: 'Guest',
+        age: 18
+    }
+})
+
+// 类型推断：userStore 的 Schema 保持为 UserSchema
+// 即 { name: string, age: number, email: string }
+const name = await userStore.getItem('name') // 类型：string
+const age = await userStore.getItem('age')   // 类型：number
+const email = await userStore.getItem('email') // 类型：string
+```
+
+### 示例 2：使用 createStore 创建存储实例（不带默认值）
+
+```typescript
+import { createStore, STORAGE_KEYS } from 'store-vert'
+
+// 定义 Schema 类型
+interface UserSchema {
+    name: string
+    age: number
+    email: string
+}
+
+// 创建不带默认值的存储实例
+const userStore = createStore<UserSchema>({
+    key: STORAGE_KEYS.local
+})
+
+// 类型推断：userStore 的 Schema 变为 MakeOptionalValues<UserSchema>
+// 即 { name: string | undefined, age: number | undefined, email: string | undefined }
+const name = await userStore.getItem('name') // 类型：string | undefined
+const age = await userStore.getItem('age')   // 类型：number | undefined
+const email = await userStore.getItem('email') // 类型：string | undefined
+
+// 需要处理 undefined 的情况
+if (name !== null && name !== undefined) {
+    console.log(name.toUpperCase()) // 安全：TypeScript 知道 name 是 string
+}
+```
+
+### 示例 3：注入异步存储（如 IndexedDB）
 
 ```typescript
 import { inject, useStorage, STORAGE_KEYS } from 'store-vert'
@@ -103,7 +160,7 @@ await storage.removeItems(['key1', 'key2'])
 await storage.getItems(['key1', 'key2'])
 ```
 
-### 示例 2：注入同步存储（如 localStorage）
+### 示例 4：注入同步存储（如 localStorage）
 
 ```typescript
 import { inject, useStorage, STORAGE_KEYS } from 'store-vert'
@@ -159,7 +216,7 @@ storage.removeItems(['key1', 'key2'])
 const items = storage.getItems(['key1', 'key2'])
 ```
 
-### 示例 3：使用 `useStorageByType` 获取特定类型的存储
+### 示例 5：使用 `useStorageByType` 获取特定类型的存储
 
 ```typescript
 import { useStorageByType, STORAGE_KEYS } from 'store-vert'
@@ -175,7 +232,7 @@ const syncStorage = useStorageByType(STORAGE_KEYS.local, 'sync')
 syncStorage.getItem('key')
 ```
 
-### 示例 4：列出所有已注册的存储
+### 示例 6：列出所有已注册的存储
 
 ```typescript
 import { listStorages } from 'store-vert'
@@ -225,6 +282,52 @@ Storage (基础接口)
    返回增强的存储实例
    ```
 
+## defaultValue 参数说明
+
+### 功能
+
+`defaultValue` 参数用于在创建存储实例时提供默认值，它会影响类型推断：
+
+- **传入 `defaultValue`**：Schema 类型保持不变，所有字段类型为原始类型
+- **不传 `defaultValue`**：Schema 类型变为 `MakeOptionalValues<Schema>`，所有字段类型变为 `原始类型 | undefined`
+
+### 类型定义
+
+```typescript
+type MakeOptionalValues<T extends AnyRecord> = {
+    [K in keyof T]: T[K] | undefined
+}
+```
+
+### 使用场景
+
+1. **有默认值**：适用于有明确初始值的场景，类型更严格
+2. **无默认值**：适用于可能不存在值的场景，类型更宽松，强制处理 undefined
+
+### 最佳实践
+
+```typescript
+// ✅ 推荐：对于必需的配置，使用 defaultValue
+const configStore = createStore<ConfigSchema>({
+    key: STORAGE_KEYS.local,
+    defaultValue: {
+        theme: 'light',
+        language: 'zh-CN'
+    }
+})
+
+// ✅ 推荐：对于用户数据，不使用 defaultValue
+const userDataStore = createStore<UserDataSchema>({
+    key: STORAGE_KEYS.local
+})
+
+// 强制处理可能不存在的情况
+const userData = await userDataStore.getItem('profile')
+if (userData) {
+    // 处理用户数据
+}
+```
+
 ## 优势
 
 1. **类型安全**：TypeScript 会自动推断正确的类型
@@ -235,4 +338,5 @@ Storage (基础接口)
 6. **统一接口**：所有存储都提供一致的增强方法
 7. **清晰分离**：async 和 sync 存储在不同容器中，便于管理
 8. **无硬编码**：使用常量和类型系统，不使用魔法值
+9. **智能类型推断**：根据是否提供 defaultValue 自动调整类型，提供更好的类型安全
 
