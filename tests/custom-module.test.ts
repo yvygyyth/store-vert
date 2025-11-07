@@ -58,7 +58,6 @@ describe('自定义模块注入测试', () => {
     // 自定义异步存储模块
     class CustomAsyncStore<Schema extends AnyRecord = AnyRecord> implements AsyncStore<Schema> {
         private store: Map<keyof Schema, Schema[keyof Schema]> = new Map()
-
         async getItem<K extends keyof Schema>(key: K): Promise<Schema[K] | undefined> {
             // 模拟异步操作
             return new Promise((resolve) => {
