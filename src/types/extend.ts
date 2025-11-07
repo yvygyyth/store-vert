@@ -1,34 +1,31 @@
-import type { AnyRecord } from './commom'
-import type { AsyncStorage, SyncStorage } from './inject'
+import type { AnyRecord, Key } from './commom'
+import type { SyncStore, AsyncStore } from './inject'
+import type { AsyncifyObject } from './tool'
+import type { STORAGE_KEYS } from '@/constants'
 
-export interface AsyncEnhancedStorage<Schema extends AnyRecord = AnyRecord> extends AsyncStorage<Schema> {
-    // 获取值，如果值不存在，则返回默认值
-    getItemOrDefault<K extends keyof Schema>(key: K, defaultValue: Schema[K]): Promise<Schema[K]>
-
-    // 是否存在值
-    hasItem<K extends keyof Schema>(key: K): Promise<boolean>
-
-    // 删除多个值
-    removeItems<K extends keyof Schema>(keys: K[]): Promise<void>
-
-    // 获取多个值
-    getItems<K extends keyof Schema>(keys: K[]): Promise<(Schema[K] | null)[]>
-}
-
-export interface SyncEnhancedStorage<Schema extends AnyRecord = AnyRecord> extends SyncStorage<Schema> {
-    // 获取值，如果值不存在，则返回默认值
+export type SyncStoreEnhanceMethods<Schema extends AnyRecord = AnyRecord> = {
     getItemOrDefault<K extends keyof Schema>(key: K, defaultValue: Schema[K]): Schema[K]
-
-    // 是否存在值
     hasItem<K extends keyof Schema>(key: K): boolean
-
-    // 删除多个值
     removeItems<K extends keyof Schema>(keys: K[]): void
-
-    // 获取多个值
     getItems<K extends keyof Schema>(keys: K[]): (Schema[K] | null)[]
 }
 
-export type EnhancedStorage<Schema extends AnyRecord = AnyRecord> =
-    | AsyncEnhancedStorage<Schema>
-    | SyncEnhancedStorage<Schema>
+export type AsyncStoreEnhanceMethods<Schema extends AnyRecord = AnyRecord> = AsyncifyObject<
+    SyncStoreEnhanceMethods<Schema>
+>
+
+export type SyncEnhancedStore<Schema extends AnyRecord = AnyRecord> = SyncStore<Schema> &
+    SyncStoreEnhanceMethods<Schema>
+
+export type AsyncEnhancedStore<Schema extends AnyRecord = AnyRecord> = AsyncStore<Schema> &
+    AsyncStoreEnhanceMethods<Schema>
+
+export type EnhancedStore<Schema extends AnyRecord = AnyRecord> = AsyncEnhancedStore<Schema> | SyncEnhancedStore<Schema>
+
+export type ExtendStoreMap<Schema extends AnyRecord = AnyRecord> = {
+    [STORAGE_KEYS.memory]: SyncEnhancedStore<Schema>
+    [STORAGE_KEYS.local]: SyncEnhancedStore<Schema>
+    [STORAGE_KEYS.session]: SyncEnhancedStore<Schema>
+    [STORAGE_KEYS.indexeddb]: AsyncEnhancedStore<Schema>
+    [key: Key]: EnhancedStore<Schema>
+}

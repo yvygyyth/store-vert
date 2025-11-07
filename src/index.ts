@@ -1,3 +1,4 @@
+import './modules'
 export * from './registry'
 export * from './createStore'
 

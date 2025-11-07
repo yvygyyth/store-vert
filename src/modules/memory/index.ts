@@ -1,9 +1,13 @@
-import type { SyncStorage } from '@/types'
+import type { SyncStore } from '@/types'
 import type { AnyRecord } from '@/types'
+
+export type MemoryStoreConstructor = {
+    new (): MemoryStore
+}
 
 type MemoryMap<Schema extends AnyRecord = AnyRecord> = Map<keyof Schema, Schema[keyof Schema]>
 
-export class MemoryStorage<Schema extends AnyRecord = AnyRecord> implements SyncStorage<Schema> {
+export class MemoryStore<Schema extends AnyRecord = AnyRecord> implements SyncStore<Schema> {
     private store: MemoryMap<Schema> = new Map()
     getItem<K extends keyof Schema>(key: K): Schema[K] | undefined {
         return this.store.get(key) as Schema[K] | undefined

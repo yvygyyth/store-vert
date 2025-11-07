@@ -1,31 +1,36 @@
-import type { Storage, Key } from '@/types'
-import { type StorageKey } from '@/constants'
-import type { StorageInstance } from '@/types/useStorage'
+import type { Key, StoreFactory, Store, AnyRecord, InjectStoreMap } from '@/types'
+import { type StoreKey } from '@/constants'
+
+type StoreKeyConstructor = StoreKey | Key
 
 // 实例容器：根据存储类型分别存储
-export const instances = new Map<Key, Storage>()
+const storageInstances = new Map<StoreKeyConstructor, StoreFactory<Store<AnyRecord>>>()
 
 /**
  * 注入存储实例
- * @param storage 原始存储对象（Storage）
+ * @param storage 存储工厂函数
  * @param instanceKey 存储实例的唯一标识
+ * @param storageType 存储类型（默认：unknown）
+ * @throws 如果 key 已存在则抛出错误
  */
-const inject = (storage: Storage, instanceKey: StorageKey | Key): void => {
-    instances.set(instanceKey, storage)
+const inject = <K extends keyof InjectStoreMap>(storage: InjectStoreMap[K], instanceKey: K): void => {
+    storageInstances.set(instanceKey, storage)
 }
 
 /**
  * 获取已注册的存储实例
- * @param options 配置选项
+ * @param key 存储实例的唯一标识
  * @returns 增强的存储实例
  */
-function useStorage(options: StorageInstance): Storage {
-    const { key } = options
-    const instance = instances.get(key)
+function useStore<K extends keyof InjectStoreMap>(key: K): InjectStoreMap[K] {
+    // 先从 storageInstances 获取该 key 的存储实例
+    const instance = storageInstances.get(key)
+
     if (!instance) {
-        throw new Error(`Storage实例 ${String(key)} 未注册`)
+        throw new Error(`Store实例 ${String(key)} 未注册`)
     }
+
     return instance
 }
 
-export { inject, useStorage }
+export { inject, useStore }

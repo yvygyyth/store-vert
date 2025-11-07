@@ -1,12 +1,17 @@
-import type { SyncStorage, AnyRecord } from '@/types'
+import type { SyncStore, AnyRecord } from '@/types'
+import { createCompatibleStorage } from '@/utils/tool'
 
-const storage = typeof window !== 'undefined' ? window.localStorage : ({} as Storage)
+export type LocalStoreConstructor = {
+    new (): LocalStore
+}
+
+const storage: Storage = createCompatibleStorage(() => window.localStorage)
 
 /**
- * LocalStorage 存储类
- * 基于浏览器的 localStorage 实现
+ * LocalStore 存储类
+ * 基于浏览器的 localStore 实现
  */
-export class LocalStorage<Schema extends AnyRecord = AnyRecord> implements SyncStorage<Schema> {
+export class LocalStore<Schema extends AnyRecord = AnyRecord> implements SyncStore<Schema> {
     constructor() {}
 
     getItem<K extends keyof Schema>(key: K): Schema[K] | undefined {

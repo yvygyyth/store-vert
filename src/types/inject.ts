@@ -1,69 +1,61 @@
-import { METHODS } from '@/constants'
-import type { AnyRecord } from './commom'
-import type { StorageNamespace } from './useStorage'
+import type { AnyRecord, Key } from './commom'
+import type { AsyncifyObject } from './tool'
+import type { STORAGE_KEYS } from '@/constants'
+import type { IndexedDBStoreConstructor } from '@/modules/indexeddb'
+import type { SessionStoreConstructor } from '@/modules/session'
+import type { LocalStoreConstructor } from '@/modules/local'
+import type { MemoryStoreConstructor } from '@/modules/memory'
 
-export type Key = string | symbol | number
-
-export interface AsyncStorage<Schema extends AnyRecord = AnyRecord> {
+export type SyncStore<Schema extends AnyRecord = AnyRecord> = {
     // 获取值
-    [METHODS.getItem]<K extends keyof Schema>(key: K): Promise<Schema[K] | undefined>
+    getItem<K extends keyof Schema>(key: K): Schema[K] | undefined
 
     // 设置值
-    [METHODS.setItem]<K extends keyof Schema>(key: K, value: Schema[K]): Promise<Schema[K]>
+    setItem<K extends keyof Schema>(key: K, value: Schema[K]): Schema[K]
 
     // 删除值
-    [METHODS.removeItem]<K extends keyof Schema>(key: K): Promise<void>
+    removeItem<K extends keyof Schema>(key: K): void
 
     // 清空存储
-    [METHODS.clear](): Promise<void>
+    clear(): void
 
     // 获取键数量
-    [METHODS.length](): Promise<number>
-
-    // 获取某个键
-    // [METHODS.key](n: number): Promise<keyof Schema>
+    length(): number
 
     // 获取所有键
-    [METHODS.keys](): Promise<(keyof Schema)[]>
+    keys(): (keyof Schema)[]
 
     // 遍历所有数据
-    [METHODS.iterate]<R>(
-        iteratee: <K extends keyof Schema>(value: Schema[K], key: K, iterationNumber: number) => R
-    ): Promise<void>
+    iterate<R>(iteratee: <K extends keyof Schema>(value: Schema[K], key: K, iterationNumber: number) => R): void
 }
 
-export interface SyncStorage<Schema extends AnyRecord = AnyRecord> {
-    // 获取值
-    [METHODS.getItem]<K extends keyof Schema>(key: K): Schema[K] | undefined
+export type AsyncStore<Schema extends AnyRecord = AnyRecord> = AsyncifyObject<SyncStore<Schema>>
 
-    // 设置值
-    [METHODS.setItem]<K extends keyof Schema>(key: K, value: Schema[K]): Schema[K]
+export type Store<Schema extends AnyRecord = AnyRecord> = AsyncStore<Schema> | SyncStore<Schema>
 
-    // 删除值
-    [METHODS.removeItem]<K extends keyof Schema>(key: K): void
-
-    // 清空存储
-    [METHODS.clear](): void
-
-    // 获取键数量
-    [METHODS.length](): number
-
-    // 获取某个键
-    // [METHODS.key](n: number): keyof Schema
-
-    // 获取所有键
-    [METHODS.keys](): (keyof Schema)[]
-
-    // 遍历所有数据
-    [METHODS.iterate]<R>(
-        iteratee: <K extends keyof Schema>(value: Schema[K], key: K, iterationNumber: number) => R
-    ): void
+export type StoreClass<Impl extends Store<AnyRecord>, Args extends unknown[] = unknown[]> = {
+    new (...args: Args): Impl
 }
 
-export type StorageReturn<Schema extends AnyRecord = AnyRecord> = AsyncStorage<Schema> | SyncStorage<Schema>
+export type StoreFunction<Impl extends Store<AnyRecord>, Args extends unknown[] = unknown[]> = (...args: Args) => Impl
 
-export interface StorageClassConstructor {
-    new (options: StorageNamespace): StorageReturn
+export type StoreFactory<Impl extends Store<AnyRecord>, Args extends unknown[] = unknown[]> =
+    | StoreClass<Impl, Args>
+    | StoreFunction<Impl, Args>
+
+export type InjectStoreMap = {
+    [STORAGE_KEYS.memory]: MemoryStoreConstructor
+    [STORAGE_KEYS.local]: LocalStoreConstructor
+    [STORAGE_KEYS.session]: SessionStoreConstructor
+    [STORAGE_KEYS.indexeddb]: IndexedDBStoreConstructor
+    [key: Key]: StoreFactory<Store<AnyRecord>, any[]>
 }
 
-export type Storage = StorageClassConstructor
+type ParametersOfStoreFactory<T> = T extends new (...args: infer P) => unknown
+    ? P // 构造函数
+    : T extends (...args: infer P) => unknown
+      ? P // 函数
+      : never
+
+// 根据 key 提取参数类型
+export type InjectStoreParameters<K extends keyof InjectStoreMap> = ParametersOfStoreFactory<InjectStoreMap[K]>

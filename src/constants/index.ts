@@ -5,7 +5,7 @@ export const STORAGE_KEYS = {
     indexeddb: 'indexeddb'
 } as const
 
-export type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS]
+export type StoreKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS]
 
 export const METHODS = {
     getItem: 'getItem',
@@ -27,4 +27,4 @@ export const STORAGE_TYPES = {
     sync: 'sync'
 } as const
 
-export type StorageType = (typeof STORAGE_TYPES)[keyof typeof STORAGE_TYPES]
+export type StoreType = (typeof STORAGE_TYPES)[keyof typeof STORAGE_TYPES]

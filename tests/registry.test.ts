@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { inject, useStorage } from '../src/registry'
+import { inject, useStore } from '../src/registry'
 
-describe('Storage Registry', () => {
+describe('Store Registry', () => {
     it('should inject and retrieve sync storage', () => {
-        const mockStorage = {
+        const mockStore = {
             getItem: (key: string) => `value-${key}`,
             setItem: (key: string, value: string) => {},
             removeItem: (key: string) => {},
@@ -14,13 +14,13 @@ describe('Storage Registry', () => {
             iterate: (iteratee: any) => undefined
         }
 
-        inject(mockStorage, 'testSync')
-        const storage = useStorage({ key: 'testSync' })
+        inject(mockStore, 'testSync')
+        const storage = useStore('testSync')
         expect(storage).toBeDefined()
     })
 
     it('should inject and retrieve async storage', async () => {
-        const mockAsyncStorage = {
+        const mockAsyncStore = {
             getItem: async (key: string) => `value-${key}`,
             setItem: async (key: string, value: string) => {},
             removeItem: async (key: string) => {},
@@ -31,12 +31,13 @@ describe('Storage Registry', () => {
             iterate: async (iteratee: any) => undefined
         }
 
-        inject(mockAsyncStorage, 'testAsync')
-        const storage = useStorage({ key: 'testAsync' })
+        inject(mockAsyncStore, 'testAsync')
+        const storage = useStore('testAsync')
+
         expect(storage).toBeDefined()
     })
 
     it('should throw error for non-existent storage', () => {
-        expect(() => useStorage({ key: 'nonExistent' })).toThrow('Storage实例 nonExistent 未注册')
+        expect(() => useStore('nonExistent')).toThrow('Store实例 nonExistent 未注册')
     })
 })

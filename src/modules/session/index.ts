@@ -1,12 +1,17 @@
-import type { SyncStorage, AnyRecord } from '@/types'
+import type { SyncStore, AnyRecord } from '@/types'
+import { createCompatibleStorage } from '@/utils/tool'
 
-const storage = typeof window !== 'undefined' ? window.sessionStorage : ({} as Storage)
+export type SessionStoreConstructor = {
+    new (): SessionStore
+}
+
+const storage: Storage = createCompatibleStorage(() => window.sessionStorage)
 
 /**
- * SessionStorage 存储类
- * 基于浏览器的 sessionStorage 实现
+ * SessionStore 存储类
+ * 基于浏览器的 sessionStore 实现
  */
-export class SessionStorage<Schema extends AnyRecord = AnyRecord> implements SyncStorage<Schema> {
+export class SessionStore<Schema extends AnyRecord = AnyRecord> implements SyncStore<Schema> {
     constructor() {}
 
     getItem<K extends keyof Schema>(key: K): Schema[K] | undefined {

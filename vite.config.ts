@@ -1,6 +1,6 @@
 import { defineConfig } from 'vitest/config'
 import { resolve } from 'path'
-import dts from 'vite-plugin-dts'
+// import dts from 'vite-plugin-dts'
 
 export default defineConfig({
     resolve: {
@@ -32,10 +32,10 @@ export default defineConfig({
         emptyOutDir: true
     },
     plugins: [
-        dts({
-            insertTypesEntry: true, // 自动生成 types entry
-            rollupTypes: true // 打包时生成类型文件
-        })
+        // dts({
+        //     insertTypesEntry: true, // 自动生成 types entry
+        //     rollupTypes: true // 打包时生成类型文件
+        // })
     ],
     test: {
         globals: true,

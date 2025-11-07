@@ -1,9 +1,11 @@
 import { inject } from '@/registry'
-import { MemoryStorage } from './memory'
-import { LocalStorage } from './local'
-import { SessionStorage } from './session'
+import { MemoryStore } from './memory'
+import { LocalStore } from './local'
+import { SessionStore } from './session'
+import { IndexedDBStore } from './indexeddb'
 import { STORAGE_KEYS } from '@/constants'
 
-inject(MemoryStorage, STORAGE_KEYS.memory)
-inject(LocalStorage, STORAGE_KEYS.local)
-inject(SessionStorage, STORAGE_KEYS.session)
+inject(MemoryStore, STORAGE_KEYS.memory)
+inject(LocalStore, STORAGE_KEYS.local)
+inject(SessionStore, STORAGE_KEYS.session)
+inject(IndexedDBStore, STORAGE_KEYS.indexeddb)
