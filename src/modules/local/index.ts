@@ -50,6 +50,10 @@ export class LocalStore<Schema extends AnyRecord = AnyRecord> implements SyncSto
         return storage.length
     }
 
+    key(n: number): keyof Schema | undefined {
+        return storage.key(n) as keyof Schema | undefined
+    }
+
     keys(): (keyof Schema)[] {
         const keys: string[] = []
         for (let i = 0; i < storage.length; i++) {

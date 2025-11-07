@@ -129,6 +129,16 @@ export class IndexedDBStore<Schema extends AnyRecord = AnyRecord> implements Asy
         }
     }
 
+    async key(n: number): Promise<keyof Schema | undefined> {
+        try {
+            const keys = await this.withStore('readonly', (store) => store.getAllKeys())
+            return keys[n] as keyof Schema | undefined
+        } catch (error) {
+            console.error('Failed to get key', error)
+            return undefined
+        }
+    }
+
     async keys(): Promise<(keyof Schema)[]> {
         try {
             const keys = await this.withStore('readonly', (store) => store.getAllKeys())

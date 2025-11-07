@@ -22,6 +22,9 @@ export type SyncStore<Schema extends AnyRecord = AnyRecord> = {
     // 获取键数量
     length(): number
 
+    // 获取键
+    key(n: number): keyof Schema | undefined
+
     // 获取所有键
     keys(): (keyof Schema)[]
 

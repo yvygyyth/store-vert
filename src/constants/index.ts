@@ -21,10 +21,3 @@ export const METHODS = {
 export const METHODS_ARRAY = Object.values(METHODS)
 
 export type Method = (typeof METHODS)[keyof typeof METHODS]
-
-export const STORAGE_TYPES = {
-    async: 'async',
-    sync: 'sync'
-} as const
-
-export type StoreType = (typeof STORAGE_TYPES)[keyof typeof STORAGE_TYPES]

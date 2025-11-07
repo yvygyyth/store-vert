@@ -30,6 +30,10 @@ export class MemoryStore<Schema extends AnyRecord = AnyRecord> implements SyncSt
         return this.store.size
     }
 
+    key(n: number): keyof Schema | undefined {
+        return Array.from(this.store.keys())[n] as keyof Schema | undefined
+    }
+
     keys(): (keyof Schema)[] {
         return Array.from(this.store.keys())
     }
