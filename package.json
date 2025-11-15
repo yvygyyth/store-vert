@@ -1,7 +1,7 @@
 {
     "name": "store-vert",
     "version": "0.1.2",
-    "description": "A minimal TypeScript utility library template with Vite, ESLint, Prettier, and Vitest",
+    "description": "A type-safe, extensible storage library with unified API supporting Memory, LocalStorage, SessionStorage, and IndexedDB",
     "type": "module",
     "main": "dist/index.js",
     "module": "dist/index.esm.js",
@@ -35,14 +35,19 @@
         "test:browser": "vitest --config=vitest.config.ts"
     },
     "keywords": [
+        "storage",
+        "localstorage",
+        "sessionstorage",
+        "indexeddb",
+        "memory",
+        "store",
         "typescript",
-        "library",
-        "vite",
-        "eslint",
-        "prettier",
-        "vitest",
-        "utils",
-        "utility"
+        "type-safe",
+        "unified-api",
+        "extensible",
+        "registry",
+        "browser",
+        "persistence"
     ],
     "author": {
         "name": "yvygyyth",
