@@ -1,6 +1,6 @@
 {
     "name": "store-vert",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "A minimal TypeScript utility library template with Vite, ESLint, Prettier, and Vitest",
     "type": "module",
     "main": "dist/index.js",
