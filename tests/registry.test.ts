@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { inject, useStore } from '../src/registry'
+import { inject, useStore } from '../src'
 
 describe('Store Registry', () => {
     it('should inject and retrieve sync storage', () => {
