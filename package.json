@@ -1,6 +1,6 @@
 {
     "name": "store-vert",
-    "version": "0.1.2",
+    "version": "0.2.0",
     "description": "A type-safe, extensible storage library with unified API supporting Memory, LocalStorage, SessionStorage, and IndexedDB",
     "type": "module",
     "main": "dist/index.js",
